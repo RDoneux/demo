@@ -102,7 +102,7 @@ public class ChatController {
     }
 
     @PutMapping("/template")
-    ResponseEntity<Message> sendTemplate(@RequestParam("id") String chatId,
+    ResponseEntity<Message> sendTemplate(@RequestParam("chatId") String chatId,
             @RequestParam("templateId") String templateId) {
         Optional<Chat> maybeChat = chatRepository.findById(chatId);
         Optional<Template> maybeTemplate = templateRepository.findById(templateId);
