@@ -61,7 +61,7 @@ public class ChatController {
     }
 
     @GetMapping("/message-history")
-    ResponseEntity<Chat> getMessages(@RequestParam("chatId") String chatId) {
+    ResponseEntity<Chat> getMessages(@RequestParam("id") String chatId) {
 
         Optional<Chat> mightBeChat = chatRepository.findById(chatId);
 
@@ -73,7 +73,7 @@ public class ChatController {
     }
 
     @PutMapping("/send-message")
-    ResponseEntity<Message> sendMessage(@RequestParam("chatId") String chatId, @RequestBody() Message message) {
+    ResponseEntity<Message> sendMessage(@RequestParam("id") String chatId, @RequestBody() Message message) {
 
         Optional<Chat> mightBeChat = chatRepository.findById(chatId);
 
@@ -102,7 +102,7 @@ public class ChatController {
     }
 
     @PutMapping("/template")
-    ResponseEntity<Message> sendTemplate(@RequestParam("chatId") String chatId,
+    ResponseEntity<Message> sendTemplate(@RequestParam("id") String chatId,
             @RequestParam("templateId") String templateId) {
         Optional<Chat> maybeChat = chatRepository.findById(chatId);
         Optional<Template> maybeTemplate = templateRepository.findById(templateId);
