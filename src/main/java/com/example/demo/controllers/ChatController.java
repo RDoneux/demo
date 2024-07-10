@@ -1,9 +1,11 @@
 package com.example.demo.controllers;
 
 import java.util.Date;
+import java.util.HashMap;
 import java.util.Optional;
 import java.util.Set;
 import java.util.List;
+import java.util.Map;
 import java.util.UUID;
 import java.util.Collections;
 
@@ -44,7 +46,7 @@ public class ChatController {
     private TemplateRepository templateRepository;
 
     @GetMapping("/create-chat")
-    ResponseEntity<String> createChat() {
+    ResponseEntity<Map<String, String>> createChat() {
         Optional<Recipient> targetRecipient = recipientRepository.findById("3245033b-b6a7-4b82-9011-50baf9340fd4");
 
         Chat chat = Chat.builder().chatId(UUID.randomUUID().toString()).recipient(targetRecipient.get())
@@ -52,8 +54,10 @@ public class ChatController {
                 .chatState(ChatState.active).chatExpiry(new Date()).build();
 
         Chat savedChat = chatRepository.save(chat);
+        Map<String, String> responseJSON = new HashMap<>();
+        responseJSON.put("chatId", savedChat.getChatId());
 
-        return new ResponseEntity<String>(savedChat.getChatId(), HttpStatus.OK);
+        return new ResponseEntity<Map<String, String>>(responseJSON, HttpStatus.OK);
     }
 
     @GetMapping("/message-history")
