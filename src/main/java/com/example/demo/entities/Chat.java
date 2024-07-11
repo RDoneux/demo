@@ -26,7 +26,6 @@ import lombok.NoArgsConstructor;
 public class Chat {
     
     @Id
-    @GeneratedValue(strategy = GenerationType.UUID)
     private String chatId;
 
     @Column

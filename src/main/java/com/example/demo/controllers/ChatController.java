@@ -58,14 +58,27 @@ public class ChatController {
     private AttachmentRepository attachmentRepository;
 
     @GetMapping("/create-chat")
-    ResponseEntity<Map<String, String>> createChat() {
+    ResponseEntity<Map<String, String>> createChat(@RequestParam("templateId") String templateId,
+            @RequestParam("candidateId") String candidateId) {
         Optional<Recipient> targetRecipient = recipientRepository.findById("3245033b-b6a7-4b82-9011-50baf9340fd4");
+        Optional<Template> targetTemplate = templateRepository.findById(templateId);
 
-        Chat chat = Chat.builder().chatId(UUID.randomUUID().toString()).recipient(targetRecipient.get())
-                .messageHistory(Collections.emptySet())
+        String chatId = UUID.randomUUID().toString();
+
+        Message savedMessage = messageRepository.save(targetTemplate.get().toMessage());
+        Set<Message> messageHistory = Set.of(savedMessage);
+
+        Chat chat = Chat.builder().chatId(chatId).recipient(targetRecipient.get())
+                .messageHistory(messageHistory)
                 .chatState(ChatState.active).chatExpiry(new Date()).build();
 
         Chat savedChat = chatRepository.save(chat);
+
+        savedMessage = messageRepository.findById(savedMessage.getMessageId()).get();
+        Message updatedMessage = savedMessage.toBuilder().chat(savedChat).build();
+
+        messageRepository.save(updatedMessage);
+
         Map<String, String> responseJSON = new HashMap<>();
         responseJSON.put("chatId", savedChat.getChatId());
 
