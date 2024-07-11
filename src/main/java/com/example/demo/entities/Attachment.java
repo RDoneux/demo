@@ -1,5 +1,7 @@
 package com.example.demo.entities;
 
+import com.example.demo.enums.MessageSource;
+import com.example.demo.enums.MessageStatus;
 import com.fasterxml.jackson.annotation.JsonIgnore;
 
 import jakarta.persistence.Column;
@@ -27,6 +29,8 @@ public class Attachment {
     private String filePath;
     private long fileSize;
     private String downloadLink;
+    private MessageSource source;
+    private MessageStatus status;
 
     @Lob
     @Column(columnDefinition = "LONGBLOB")

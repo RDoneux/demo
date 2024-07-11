@@ -10,6 +10,7 @@ import java.util.UUID;
 import java.io.IOException;
 import java.util.Collections;
 
+import org.glassfish.jaxb.core.v2.Messages;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpHeaders;
 import org.springframework.http.HttpStatus;
@@ -30,6 +31,8 @@ import com.example.demo.entities.Message;
 import com.example.demo.entities.Recipient;
 import com.example.demo.entities.Template;
 import com.example.demo.enums.ChatState;
+import com.example.demo.enums.MessageSource;
+import com.example.demo.enums.MessageStatus;
 import com.example.demo.repositories.AttachmentRepository;
 import com.example.demo.repositories.ChatRepository;
 import com.example.demo.repositories.MessageRepository;
@@ -128,6 +131,7 @@ public class ChatController {
                 Attachment attachment = Attachment.builder().attachmentId(attachmentId).chat(mightBeChat.get())
                         .downloadLink("https://demo-production-e943.up.railway.app/download/" + attachmentId)
                         .fileName(file.getOriginalFilename()).data(file.getBytes()).fileSize(file.getSize())
+                        .source(MessageSource.sender).status(MessageStatus.sent)
                         .fileType(file.getContentType()).build();
                 Attachment savedAttachment = attachmentRepository.save(attachment);
 
