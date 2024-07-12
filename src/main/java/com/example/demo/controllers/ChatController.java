@@ -12,6 +12,7 @@ import java.io.IOException;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpHeaders;
 import org.springframework.http.HttpStatus;
+import org.springframework.http.HttpStatusCode;
 import org.springframework.http.MediaType;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.CrossOrigin;
@@ -126,6 +127,17 @@ public class ChatController {
                 chatRepository.save(newChat);
 
                 return new ResponseEntity<Message>(savedMessage, HttpStatus.OK);
+            }
+
+            if (message.getContent().equals("send me an attachment")) {
+                Optional<Attachment> generatedAttachment = attachmentRepository.findById("031df0c3-9c04-4cde-9d74-a3bdff083a3e");
+                Set<Attachment> newAttachmentHistory = mightBeChat.get().getAttachments();
+                newAttachmentHistory.add(generatedAttachment.get());
+
+                Chat newChat = mightBeChat.get().toBuilder().attachments(newAttachmentHistory).build();
+                chatRepository.save(newChat);
+
+                return new ResponseEntity<Message>(HttpStatus.OK);
             }
 
             Message savedMessage = messageRepository.save(message.toBuilder().chat(mightBeChat.get()).build());
