@@ -8,7 +8,6 @@ import java.util.List;
 import java.util.Map;
 import java.util.UUID;
 import java.io.IOException;
-import java.util.Collections;
 
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpHeaders;
@@ -113,6 +112,21 @@ public class ChatController {
         Optional<Chat> mightBeChat = chatRepository.findById(chatId);
 
         if (mightBeChat.isPresent()) {
+
+            if (message.getContent().equals("send me a message")) {
+                Message generatedMessage = Message.builder().chat(mightBeChat.get()).source(MessageSource.recipient)
+                        .status(MessageStatus.read)
+                        .content("This is a generated message testing the recipient response functionality")
+                        .messageId(UUID.randomUUID().toString()).timeSent(new Date()).build();
+                Message savedMessage = messageRepository.save(generatedMessage);
+                Set<Message> newMessageHistory = mightBeChat.get().getMessageHistory();
+                newMessageHistory.add(savedMessage);
+
+                Chat newChat = mightBeChat.get().toBuilder().messageHistory(newMessageHistory).build();
+                chatRepository.save(newChat);
+
+                return new ResponseEntity<Message>(savedMessage, HttpStatus.OK);
+            }
 
             Message savedMessage = messageRepository.save(message.toBuilder().chat(mightBeChat.get()).build());
 

@@ -5,10 +5,12 @@ import java.util.Date;
 import com.example.demo.enums.MessageSource;
 import com.example.demo.enums.MessageStatus;
 
+import jakarta.persistence.Column;
 import jakarta.persistence.Entity;
 import jakarta.persistence.GeneratedValue;
 import jakarta.persistence.GenerationType;
 import jakarta.persistence.Id;
+import jakarta.persistence.Lob;
 import lombok.AllArgsConstructor;
 import lombok.Builder;
 import lombok.Getter;
@@ -25,6 +27,8 @@ public class Template {
     @GeneratedValue(strategy = GenerationType.UUID)
     String templateId;
 
+    @Lob
+    @Column(columnDefinition = "LONGTEXT")
     String content;
     String title;
 
