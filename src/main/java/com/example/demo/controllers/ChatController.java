@@ -131,8 +131,12 @@ public class ChatController {
 
             if (message.getContent().equals("send me an attachment")) {
                 Optional<Attachment> generatedAttachment = attachmentRepository.findById("031df0c3-9c04-4cde-9d74-a3bdff083a3e");
+
+                Attachment updatedAttachment = generatedAttachment.get().toBuilder().chat(mightBeChat.get()).build();
+                Attachment savedAttachment = attachmentRepository.save(updatedAttachment);
+
                 Set<Attachment> newAttachmentHistory = mightBeChat.get().getAttachments();
-                newAttachmentHistory.add(generatedAttachment.get());
+                newAttachmentHistory.add(savedAttachment);
 
                 Chat newChat = mightBeChat.get().toBuilder().attachments(newAttachmentHistory).build();
                 chatRepository.save(newChat);
